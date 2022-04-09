@@ -4,7 +4,7 @@ import time
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-s.bind(("127.0.0.1", 62121))
+s.bind(("192.168.1.41", 6677))
 
 running = True
 
@@ -61,12 +61,28 @@ def process_input():
             except:
                 print("Error: could not send " + str(input_data) + " command")
         elif input_data == "help":
-            print("user\ntree\ndel\ncommand\nstartup\ncheck")
+            print("user\ntree\ndel\ncommand\nstartup\ncheck\nshutdown\nbrowse")
         elif input_data == "check":
             try:
                 conn.sendall("check".encode("utf-8"))
-                check_data = (conn.recv(1024)).decode("utf-8")
+                check_data = (conn.recv(2048)).decode("utf-8")
                 print(check_data)
+            except:
+                print("Error: could not send " + str(input_data) + " command")
+        elif input_data == "shutdown":
+            try:
+                conn.sendall("shutdown".encode("utf-8"))
+                shutdown_data = (conn.recv(2048)).decode("utf-8")
+                print(shutdown_data)
+            except:
+                print("Error: could not send " + str(input_data) + " command")
+        elif input_data == "browse":
+            browse = input("url>")
+            try:
+                conn.sendall("browse".encode("utf-8"))
+                conn.sendall(browse.encode("utf-8"))
+                browse_data = (conn.recv(2048)).decode("utf-8")
+                print(browse_data)
             except:
                 print("Error: could not send " + str(input_data) + " command")
 
